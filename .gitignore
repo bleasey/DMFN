@@ -1,0 +1,4 @@
+*.pyc
+*.CALVIN-ASUS-LAPTOP
+./tensorDump*
+outputs

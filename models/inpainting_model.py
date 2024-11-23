@@ -113,7 +113,7 @@ class InpaintingModel(BaseModel):
 
             self.log_dict = OrderedDict()
             # print network
-            self.print_network()
+            # self.print_network()
 
     def feed_data(self, data):
         self.var_input = data['input'].to(self.device)
@@ -126,6 +126,11 @@ class InpaintingModel(BaseModel):
         # update G
         for p in self.netD.parameters():
             p.requires_grad = False
+
+        # print("-----------------")
+        # print(self.var_input.shape, self.var_mask.shape)
+        # aa = self.netG(torch.cat([self.var_input, self.var_mask], dim=1))
+        # print(f"Here: {aa.shape}")
 
         self.optimizer_G.zero_grad()
         self.output = self.var_mask.detach() * self.netG(torch.cat([self.var_input, self.var_mask], dim=1)) + (
@@ -158,6 +163,9 @@ class InpaintingModel(BaseModel):
                 l_g_center = self.l_center_w * center_loss(output_feas[3], target_feas[3])
                 l_g_total += l_g_center
 
+        # print(self.output.shape, self.var_bbox.shape)
+        # print(self.crop_patch(self.output, self.var_bbox).shape)
+        # ooga
         pred_g_fake, dis_feas_fake = self.netD(self.crop_patch(self.output, self.var_bbox), self.output)
         pred_g_real, dis_feas_real = self.netD(self.crop_patch(self.var_target, self.var_bbox), self.var_target)
         pred_g_real.detach_()

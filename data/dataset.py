@@ -40,7 +40,7 @@ class ImageFilelist(data.Dataset):
     def __getitem__(self, index):
         impath = self.imlist[index]
         img = self.loader(impath)
-        img = self.resize(img, self.opt['img_shape'][2], self.opt['img_shape'][1])
+        img = self.resize(img, self.opt['img_shape'][1], self.opt['img_shape'][2])
         img_tensor = self.transform(img)  # Tensor [C, H, W], [-1, 1]
         if self.opt['mask_type'] == 'regular':
             bbox_tensor, mask_tensor = self.load_mask(index)  # Tensor [1, H, W]
@@ -72,7 +72,7 @@ class ImageFilelist(data.Dataset):
             else:
                 mask_index = index
             mask = self.loader(self.mask_data[mask_index]).convert('L')  # image [H, W, 1], [0, 255]
-            mask = np.asarray(mask.resize((self.opt['img_shape'][2], self.opt['img_shape'][1]), Image.BICUBIC))
+            mask = np.asarray(mask.resize((self.opt['img_shape'][1], self.opt['img_shape'][2]), Image.BICUBIC))
             mask = (mask > 0).astype(np.float32)
             mask = torch.from_numpy(np.expand_dims(mask, 0))  # Tensor, [1, H, W]
             return mask

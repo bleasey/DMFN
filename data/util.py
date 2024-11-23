@@ -31,15 +31,16 @@ def bbox(opt):
         tuple: (top, left, height, width)
 
     """
-    fineSize = opt['fineSize']
+    img_height = opt['img_height']
+    img_width = opt['img_width']
     if opt['mask_pos'] == 'random':  # random mask
-        maxt = fineSize - opt['vertical_margin'] - opt['mask_height']  # max top
-        maxl = fineSize - opt['horizontal_margin'] - opt['mask_width']  # max left
+        maxt = img_height - opt['vertical_margin'] - opt['mask_height']  # max top
+        maxl = img_width - opt['horizontal_margin'] - opt['mask_width']  # max left
         t = random.randint(opt['vertical_margin'], maxt)
         l = random.randint(opt['horizontal_margin'], maxl)
     else:  # center mask
-        t = (fineSize - opt['vertical_margin'] - opt['mask_height']) // 2
-        l = (fineSize - opt['horizontal_margin'] - opt['mask_width']) // 2
+        t = (img_height - opt['vertical_margin'] - opt['mask_height']) // 2
+        l = (img_width - opt['horizontal_margin'] - opt['mask_width']) // 2
     h = opt['mask_height']
     w = opt['mask_width']
     return (t, l, h, w)
@@ -65,6 +66,7 @@ def bbox2mask(bbox, opt):
         bbox[1] + w:bbox[1] + bbox[3] - w] = 1.
         return mask
 
-    fineSize = opt['fineSize']
-    mask = torch.from_numpy(npmask(bbox, fineSize, fineSize, opt['max_delta_height'], opt['max_delta_width']))
+    img_height = opt['img_height']
+    img_width = opt['img_width']
+    mask = torch.from_numpy(npmask(bbox, img_height, img_width, opt['max_delta_height'], opt['max_delta_width']))
     return mask

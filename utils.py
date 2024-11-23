@@ -6,7 +6,7 @@ import numpy as np
 
 def get_config(config):
     with open(config, 'r') as stream:
-        return yaml.load(stream)
+        return yaml.load(stream, Loader=yaml.FullLoader)
 
 
 def _write_images(images, display_image_num, file_name):  # images is a list that contains tensors with shape [N,C,H,W]
